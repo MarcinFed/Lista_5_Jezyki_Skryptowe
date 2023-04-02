@@ -306,4 +306,8 @@ Dec 10 09:08:03 LabSZ sshd[24417]: Connection closed by 185.190.58.151 [preauth]
 Dec 10 09:08:38 LabSZ sshd[24419]: Invalid user admin from 185.190.58.151
 Dec 10 09:08:38 LabSZ sshd[24419]: input_userauth_request: invalid user admin [preauth]
 Dec 10 09:08:38 LabSZ sshd[24419]: pam_unix(sshd:auth): check pass; user unknown
-Dec 10 09:08:38 LabSZ sshd[24419]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=185.190.58.151 
+Dec 10 09:08:38 LabSZ sshd[24419]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=185.190.58.151
+Dec 10 19:22:22 LabSZ sshd[19465]: Accepted password for curi from 137.189.241.19 port 4300 ssh2
+Dec 10 19:44:35 LabSZ sshd[19708]: Received disconnect from 137.189.241.19: 11: disconnected by user
+Dec 10 19:12:22 LabSZ sshd[19465]: Accepted password for curi from 137.189.241.19 port 4300 ssh2
+Dec 10 19:45:35 LabSZ sshd[19708]: Received disconnect from 137.189.241.19: 11: disconnected by user

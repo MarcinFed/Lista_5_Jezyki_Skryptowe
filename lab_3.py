@@ -1,4 +1,6 @@
 import logging, sys
+from lab_2 import parse_ssh_log, get_message_type, LOG_MESSAGE, ACCEPTED_LOGGING_MESSAGE, FAILED_PASSWORD_MESSAGE, INVALID_USER_MESSAGE, DISCONNECTED_MESSAGE, FAILED_LOGGING_MESSAGE, POSSIBLE_BREAK_IN_MESSAGE
+from lab_1 import get_logs_list
 
 log_format = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
 error_format = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s (%(pathname)s:%(lineno)d)")
@@ -65,3 +67,34 @@ def invalid_user_log():
 
 def possible_break_in_log():
     logger.critical("Próba włamania")
+
+
+MESSAGE_LOGGING_DICT = {
+    ACCEPTED_LOGGING_MESSAGE: accepted_logging_log,
+    DISCONNECTED_MESSAGE: disconnected_log,
+    FAILED_LOGGING_MESSAGE: failed_logging_log,
+    FAILED_PASSWORD_MESSAGE: failed_password_log,
+    INVALID_USER_MESSAGE: invalid_user_log,
+    POSSIBLE_BREAK_IN_MESSAGE: possible_break_in_log,
+}
+
+
+def process_log_line(log):
+    parsed_log = parse_ssh_log(log)
+    message_type = get_message_type(parsed_log[LOG_MESSAGE])
+    bytes_read_log(log)
+
+    for message, action in MESSAGE_LOGGING_DICT.items():
+        if message_type == message:
+            return action()
+
+
+def process_logs():
+    for log in get_logs_list():
+        process_log_line(log)
+
+
+if __name__ == "__main__":
+    process_logs()
+
+
