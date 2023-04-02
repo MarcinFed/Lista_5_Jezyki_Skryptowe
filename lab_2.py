@@ -1,4 +1,6 @@
 import re, sys
+from lab_3 import bytes_read_log, accepted_logging_log, disconnected_log, failed_logging_log, failed_password_log, invalid_user_log, possible_break_in_log, logger
+
 
 LOG_PATTERN = r"(\w{3}\s+\d+\s\d+:\d+:\d+)\s(\w+)\ssshd\[\d+\]:\s([^\n]+)"
 IPV4_PATTERN = r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
@@ -9,8 +11,8 @@ LOG_TIMESTAMP = "timestamp"
 FIRST_MATCH = 1
 ACCEPTED_LOGGING_MESSAGE_PATTERN = r"Accepted.*for"
 FAILED_PASSWORD_MESSAGE_PATTERN = r"Failed.*password"
-INVALID_USER_MESSAGE_PATTERN = r"Failed.*invalid user"
-DISCONNECTED_MESSAGE_PATTERN = r"Disconnected from"
+INVALID_USER_MESSAGE_PATTERN = r"(?i)nvalid user"
+DISCONNECTED_MESSAGE_PATTERN = r"Connection closed"
 FAILED_LOGGING_MESSAGE_PATTERN = r"Failed.*from"
 POSSIBLE_BREAK_IN_MESSAGE_PATTERN = r"POSSIBLE BREAK-IN ATTEMPT"
 ACCEPTED_LOGGING_MESSAGE = "udane logowanie"
@@ -20,13 +22,45 @@ DISCONNECTED_MESSAGE = "zamknięcie połączenia"
 FAILED_LOGGING_MESSAGE = "nieudane logowanie"
 POSSIBLE_BREAK_IN_MESSAGE = "próba włamania"
 OTHER_MESSAGE = "inne"
+
+
+def accepted_logging_notice():
+    accepted_logging_log()
+    return ACCEPTED_LOGGING_MESSAGE
+
+
+def failed_password_notice():
+    failed_password_log()
+    return FAILED_PASSWORD_MESSAGE
+
+
+def disconnected_notice():
+    disconnected_log()
+    return DISCONNECTED_MESSAGE
+
+
+def invalid_user_notice():
+    invalid_user_log()
+    return INVALID_USER_MESSAGE
+
+
+def possible_break_in_notice():
+    possible_break_in_log()
+    return POSSIBLE_BREAK_IN_MESSAGE
+
+
+def failed_logging_notice():
+    failed_logging_log()
+    return FAILED_LOGGING_MESSAGE
+
+
 MESSAGE_PATTERN_DICT = {
-    ACCEPTED_LOGGING_MESSAGE_PATTERN : ACCEPTED_LOGGING_MESSAGE,
-    FAILED_LOGGING_MESSAGE_PATTERN : FAILED_LOGGING_MESSAGE,
-    FAILED_PASSWORD_MESSAGE_PATTERN : FAILED_PASSWORD_MESSAGE,
-    DISCONNECTED_MESSAGE_PATTERN : DISCONNECTED_MESSAGE,
-    INVALID_USER_MESSAGE_PATTERN : INVALID_USER_MESSAGE,
-    POSSIBLE_BREAK_IN_MESSAGE_PATTERN : POSSIBLE_BREAK_IN_MESSAGE,
+    ACCEPTED_LOGGING_MESSAGE_PATTERN: accepted_logging_notice,
+    FAILED_PASSWORD_MESSAGE_PATTERN: failed_password_notice,
+    DISCONNECTED_MESSAGE_PATTERN: disconnected_notice,
+    INVALID_USER_MESSAGE_PATTERN: invalid_user_notice,
+    POSSIBLE_BREAK_IN_MESSAGE_PATTERN: possible_break_in_notice,
+    FAILED_LOGGING_MESSAGE_PATTERN: failed_logging_notice,
 }
 
 
@@ -38,6 +72,7 @@ def parse_ssh_log(log_string):
             LOG_HOSTNAME: hostname,
             LOG_MESSAGE: message
         }
+    bytes_read_log(log_string)
     return ssh_log_dict
 
 
@@ -53,12 +88,14 @@ def get_user_from_log(ssh_log_dict):
 
 
 def get_message_type(ssh_log_message):
-    for message_pattern, message in MESSAGE_PATTERN_DICT.items():
+    for message_pattern, action in MESSAGE_PATTERN_DICT.items():
         if re.search(message_pattern, ssh_log_message):
-            return message
+            return action()
     return OTHER_MESSAGE
 
 
 if __name__ == "__main__":
-    print(parse_ssh_log(sys.stdin))
-    sys.stdin.close()
+    ssh_logs_file = open("SSH_Test.txt", "r")
+    for line in ssh_logs_file:
+        parse = parse_ssh_log(line)
+        print(get_message_type(parse[LOG_MESSAGE]))
