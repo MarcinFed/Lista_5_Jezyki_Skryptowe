@@ -22,7 +22,7 @@ def get_all_users(logs):
     users = []
     for log in logs:
         user = get_user_from_log(log)
-        if user is not NO_USER_INFO and user != UNKNOWN_USER:
+        if user != NO_USER_INFO and user != UNKNOWN_USER:
             users.append(user)
     return users
 

@@ -1,3 +1,4 @@
+Dec 10 05:44:35 LabSZ sshd[19708]: Received disconnect from 137.189.241.19: 11: disconnected by user
 Dec 10 06:55:46 LabSZ sshd[24200]: reverse mapping checking getaddrinfo for ns.marryaldkfaczcz.com [173.234.31.186] failed - POSSIBLE BREAK-IN ATTEMPT!
 Dec 10 06:55:46 LabSZ sshd[24200]: Invalid user webmaster from 173.234.31.186
 Dec 10 06:55:46 LabSZ sshd[24200]: input_userauth_request: invalid user webmaster [preauth]
