@@ -14,7 +14,7 @@ FIRST_IPV4_FROM_LOG = 0
 
 
 def is_login(log):
-    message_type = get_message_type(log[LOG_MESSAGE])
+    message_type = get_message_type(log)
     return message_type == ACCEPTED_LOGGING_MESSAGE
 
 
@@ -95,7 +95,7 @@ def get_most_least_frequent_users(logs):
 def find_connection_close_log(log, logs_to_find):
     user_ip = get_ipv4s_from_log(log)
     for log in logs_to_find:
-        if get_ipv4s_from_log(log) == user_ip and get_message_type(log[LOG_MESSAGE]) == DISCONNECTED_MESSAGE:
+        if get_ipv4s_from_log(log) == user_ip and get_message_type(log) == DISCONNECTED_MESSAGE:
             return log
 
 
@@ -117,7 +117,7 @@ def calculate_connection_duration(log, logs):
 def calculate_session_times(logs):
     ssh_session_durations = []
     for log in logs:
-        if get_message_type(log[LOG_MESSAGE]) == ACCEPTED_LOGGING_MESSAGE:
+        if get_message_type(log) == ACCEPTED_LOGGING_MESSAGE:
             connection_duration = calculate_connection_duration(log, logs)
             if connection_duration is not None:
                 ssh_session_durations.append(connection_duration)

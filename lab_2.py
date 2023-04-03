@@ -48,7 +48,8 @@ def check_message_type(pattern, ssh_log_message):
     return re.search(pattern, ssh_log_message)
 
 
-def get_message_type(ssh_log_message):
+def get_message_type(ssh_log_dict):
+    ssh_log_message = ssh_log_dict[LOG_MESSAGE]
     for pattern, message_type in MESSAGE_PATTERN_DICT.items():
         if check_message_type(pattern, ssh_log_message):
             return message_type
@@ -61,4 +62,4 @@ if __name__ == "__main__":
         entry = parse_ssh_log(line)
         print(get_ipv4s_from_log(entry))
         print(get_user_from_log(entry))
-        print(get_message_type(entry[LOG_MESSAGE]))
+        print(get_message_type(entry))

@@ -41,6 +41,19 @@ logger.addHandler(info_handler)
 logger.addHandler(debug_handler)
 
 
+TEXT_LVL = {
+    "error": logging.ERROR,
+    "critical": logging.CRITICAL,
+    "warning": logging.WARNING,
+    "info": logging.INFO,
+    "debug": logging.DEBUG,
+}
+
+
+def text_to_logging_lvl(lvl):
+    return TEXT_LVL[lvl] if lvl in TEXT_LVL else logging.DEBUG
+
+
 def bytes_read_log(log_string):
     logger.debug(f"Liczba przeczytanych bajtów: {len(log_string)}")
 
@@ -81,12 +94,18 @@ MESSAGE_LOGGING_DICT = {
 
 def process_log_line(log):
     parsed_log = parse_ssh_log(log)
-    message_type = get_message_type(parsed_log[LOG_MESSAGE])
+    message_type = get_message_type(parsed_log)
     bytes_read_log(log)
 
     for message, action in MESSAGE_LOGGING_DICT.items():
         if message_type == message:
             return action()
+
+
+def process_logs_with_lvl(logging_lvl, logs):
+    logger.setLevel(logging_lvl)
+    for log in logs:
+        process_log_line(log)
 
 
 def process_logs():
